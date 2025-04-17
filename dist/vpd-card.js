@@ -235,46 +235,60 @@ class VpdCard extends HTMLElement {
         const thead = document.createElement("thead");
         const tbody = document.createElement("tbody");
 
-        // Build header row
+        // --- Modification Start ---
+        // Get header data and extract humidity keys in original order
         const headerData = tableData[0];
+        const allHeaderKeys = Object.keys(headerData);
+        const humidityKeys = allHeaderKeys.filter(key => key !== 'temp'); // e.g., ["30%", "35%", ..., "90%"]
+
+        // Create the reversed list of humidity keys for display order
+        const reversedHumidityKeys = [...humidityKeys].reverse(); // e.g., ["90%", "85%", ..., "30%"]
+        // --- Modification End ---
+
+
+        // Build header row (using reversed order for humidity)
         const headerRow = thead.insertRow();
-        for (const key in headerData) {
-            if (Object.prototype.hasOwnProperty.call(headerData, key)) {
-                const cell = document.createElement("th");
-                cell.scope = "col";
-                cell.textContent = headerData[key];
-                headerRow.appendChild(cell);
-            }
-        }
-        if (headerRow.cells[0]) headerRow.cells[0].scope = "col";
+
+        // Add Temp header first
+        const tempHeaderCell = document.createElement("th");
+        tempHeaderCell.scope = "col";
+        tempHeaderCell.textContent = headerData['temp']; // Should be "°C"
+        headerRow.appendChild(tempHeaderCell);
+
+        // Add humidity headers in reversed order
+        reversedHumidityKeys.forEach(key => {
+            const cell = document.createElement("th");
+            cell.scope = "col";
+            cell.textContent = headerData[key]; // Use key like "90%" to get header text "90%"
+            headerRow.appendChild(cell);
+        });
 
         table.appendChild(thead);
 
-        // Build data rows
+        // Build data rows (using reversed order for humidity)
         for (let i = 1; i < tableData.length; i++) {
             const rowData = tableData[i];
             const row = tbody.insertRow();
-            let firstCell = true;
-            for (const key in rowData) {
-                if (Object.prototype.hasOwnProperty.call(rowData, key)) {
-                    const cell = row.insertCell();
-                    if (firstCell) {
-                        cell.textContent = rowData[key];
-                        cell.scope = "row";
-                        firstCell = false;
-                    } else {
-                        const cellData = rowData[key];
-                        if (typeof cellData === 'object' && cellData !== null && 'value' in cellData) {
-                            cell.textContent = parseFloat(cellData.value).toFixed(2);
-                            if (cellData.class) {
-                                cell.classList.add(cellData.class);
-                            }
-                        } else {
-                            cell.textContent = String(cellData);
-                        }
+
+            // Add Temp cell first
+            const tempCell = row.insertCell();
+            tempCell.textContent = rowData['temp'];
+            tempCell.scope = "row";
+
+            // Add humidity data cells in reversed order
+            reversedHumidityKeys.forEach(key => {
+                const cell = row.insertCell();
+                const cellData = rowData[key]; // Access data using the key (e.g., rowData["90%"])
+                if (typeof cellData === 'object' && cellData !== null && 'value' in cellData) {
+                    cell.textContent = parseFloat(cellData.value).toFixed(2);
+                    if (cellData.class) {
+                        cell.classList.add(cellData.class);
                     }
+                } else {
+                    // Fallback if data format is unexpected
+                    cell.textContent = String(cellData);
                 }
-            }
+            });
         }
         table.appendChild(tbody);
         container.innerHTML = ''; // Clear previous content
