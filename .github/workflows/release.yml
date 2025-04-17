@@ -95,11 +95,11 @@ jobs:
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
           # Use HEAD which points to the commit that triggered the workflow
-          current-tag: "HEAD"
-          # Use the previous tag determined in the versioning step
+          head-ref: "HEAD"
+          # Use the previous tag determined in the versioning step as the base for comparison
           # If previous_tag is empty (first release), it should compare from the beginning
-          previous-tag: "${{ steps.versioning.outputs.previous_tag }}"
-          # Optional: customize formatting if needed
+          base-ref: "${{ steps.versioning.outputs.previous_tag }}"
+          # Optional: customize formatting if needed (e.g., add 'filter' or 'configuration')
 
       - name: Create Git Tag
         run: |
