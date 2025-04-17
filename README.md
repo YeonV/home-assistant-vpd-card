@@ -7,7 +7,7 @@
 
 Display a Vapor Pressure Deficit (VPD) table directly in your Lovelace dashboards, highlighting the current conditions based on your temperature and humidity sensors. Ideal for monitoring environments like grow tents or greenhouses.
 
-![image](https://github.com/user-attachments/assets/9f8e0b78-11cc-4d2e-be79-0ad5b682c09c)
+![image](https://github.com/user-attachments/assets/d61e476f-117f-411b-90b3-6493202f69d8)
 
 **Features:**
 
