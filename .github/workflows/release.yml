@@ -94,9 +94,9 @@ jobs:
         uses: metcalfc/changelog-generator@v4.3.1
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
-          head-ref: ${{ github.sha }} # Use specific commit SHA
-          base-ref: "${{ steps.versioning.outputs.previous_tag }}" # Previous tag or empty string
-          fetch: true # Explicitly enable fetch within the action
+          head-ref: ${{ github.sha }}
+          base-ref: "${{ steps.versioning.outputs.previous_tag }}"
+          fetch: true
 
       - name: Write Changelog to File
         id: write_changelog
@@ -113,10 +113,6 @@ jobs:
         with:
           tag_name: ${{ steps.versioning.outputs.new_tag }}
           release_name: "Release ${{ steps.versioning.outputs.new_tag }}"
-          # --- MODIFIED: Use body_path instead of body ---
-          body_path: CHANGELOG.md # Use the file content for the release body
+          body_path: CHANGELOG.md
           draft: false
           prerelease: false
-          # --- NEW: Add assets section ---
-          files: | # Use the 'files' input which replaces 'assets' in newer versions of the action
-            CHANGELOG.md

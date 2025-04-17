@@ -1,10 +1,9 @@
 # VPD Table Card for Home Assistant
 
+[![GitHub Release](https://img.shields.io/github/v/release/YeonV/home-assistant-vpd-card?include_prereleases)](https://github.com/YeonV/home-assistant-vpd-card/releases)
+[![License](https://img.shields.io/github/license/YeonV/home-assistant-vpd-card)](LICENSE)
 [![creator](https://img.shields.io/badge/CREATOR-Yeon-blue.svg?logo=github&logoColor=white)](https://github.com/YeonV) [![creator](https://img.shields.io/badge/A.K.A-Blade-darkred.svg?logo=github&logoColor=white)](https://github.com/YeonV)
-[![GitHub Release][releases-shield]][releases]
-[![License][license-shield]][license]
 
-<!-- Optional: Add shields for HACS default, downloads, etc. if you track them -->
 
 Display a Vapor Pressure Deficit (VPD) table directly in your Lovelace dashboards, highlighting the current conditions based on your temperature and humidity sensors. Ideal for monitoring environments like grow tents or greenhouses.
 
