@@ -1,6 +1,5 @@
 # VPD Table Card for Home Assistant
 
-
 [![creator](https://img.shields.io/badge/CREATOR-Yeon-blue.svg?logo=github&logoColor=white)](https://github.com/YeonV) [![creator](https://img.shields.io/badge/A.K.A-Blade-darkred.svg?logo=github&logoColor=white)](https://github.com/YeonV)
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]][license]
