@@ -89,17 +89,17 @@ jobs:
           echo "new_tag=$new_version" >> $GITHUB_OUTPUT
           echo "previous_tag=$previous_tag" >> $GITHUB_OUTPUT
 
-      # - name: Generate Changelog
-      #   id: changelog
-      #   uses: metcalfc/changelog-generator@v4.3.1 # Use a specific version
-      #   with:
-      #     myToken: ${{ secrets.GITHUB_TOKEN }}
-      #     # Use HEAD which points to the commit that triggered the workflow
-      #     head-ref: "HEAD"
-      #     # Use the previous tag determined in the versioning step as the base for comparison
-      #     # If previous_tag is empty (first release), it should compare from the beginning
-      #     base-ref: "${{ steps.versioning.outputs.previous_tag }}"
-      #     # Optional: customize formatting if needed (e.g., add 'filter' or 'configuration')
+      - name: Generate Changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.3.1 # Use a specific version
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+          # Use HEAD which points to the commit that triggered the workflow
+          head-ref: "HEAD"
+          # Use the previous tag determined in the versioning step as the base for comparison
+          # If previous_tag is empty (first release), it should compare from the beginning
+          base-ref: "${{ steps.versioning.outputs.previous_tag }}"
+          # Optional: customize formatting if needed (e.g., add 'filter' or 'configuration')
 
       - name: Create Git Tag
         run: |
