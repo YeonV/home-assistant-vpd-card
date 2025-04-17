@@ -235,18 +235,11 @@ class VpdCard extends HTMLElement {
         const thead = document.createElement("thead");
         const tbody = document.createElement("tbody");
 
-        // --- Modification Start ---
-        // Get header data and extract humidity keys in original order
         const headerData = tableData[0];
         const allHeaderKeys = Object.keys(headerData);
-        const humidityKeys = allHeaderKeys.filter(key => key !== 'temp'); // e.g., ["30%", "35%", ..., "90%"]
+        const humidityKeys = allHeaderKeys.filter(key => key !== 'temp'); 
+        const reversedHumidityKeys = [...humidityKeys].reverse(); 
 
-        // Create the reversed list of humidity keys for display order
-        const reversedHumidityKeys = [...humidityKeys].reverse(); // e.g., ["90%", "85%", ..., "30%"]
-        // --- Modification End ---
-
-
-        // Build header row (using reversed order for humidity)
         const headerRow = thead.insertRow();
 
         // Add Temp header first
