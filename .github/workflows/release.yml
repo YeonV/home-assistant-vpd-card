@@ -89,27 +89,23 @@ jobs:
           echo "new_tag=$new_version" >> $GITHUB_OUTPUT
           echo "previous_tag=$previous_tag" >> $GITHUB_OUTPUT
 
-      - name: Generate Changelog
+      - name: Generate Changelog Content
         id: changelog
-        uses: metcalfc/changelog-generator@v4.3.1 # Use a specific version
+        uses: metcalfc/changelog-generator@v4.3.1
         with:
           myToken: ${{ secrets.GITHUB_TOKEN }}
-          # Use HEAD which points to the commit that triggered the workflow
-          head-ref: "HEAD"
-          # Use the previous tag determined in the versioning step as the base for comparison
-          # If previous_tag is empty (first release), it should compare from the beginning
-          base-ref: "${{ steps.versioning.outputs.previous_tag }}"
-          # Optional: customize formatting if needed (e.g., add 'filter' or 'configuration')
+          head-ref: ${{ github.sha }} # Use specific commit SHA
+          base-ref: "${{ steps.versioning.outputs.previous_tag }}" # Previous tag or empty string
+          fetch: true # Explicitly enable fetch within the action
 
-      - name: Create Git Tag
+      - name: Write Changelog to File
+        id: write_changelog
         run: |
-          set -e
-          new_tag="${{ steps.versioning.outputs.new_tag }}"
-          echo "Creating git tag $new_tag"
-          git tag $new_tag
-          echo "Pushing git tag $new_tag"
-          git push origin $new_tag
-
+          echo "${{ steps.changelog.outputs.changelog }}" > CHANGELOG.md
+          echo "Changelog written to CHANGELOG.md"
+          # Optional: Cat the file to see its content in logs
+          cat CHANGELOG.md
+          
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
@@ -117,6 +113,10 @@ jobs:
         with:
           tag_name: ${{ steps.versioning.outputs.new_tag }}
           release_name: "Release ${{ steps.versioning.outputs.new_tag }}"
-          # body: ${{ steps.changelog.outputs.changelog }} # Use generated changelog
+          # --- MODIFIED: Use body_path instead of body ---
+          body_path: CHANGELOG.md # Use the file content for the release body
           draft: false
           prerelease: false
+          # --- NEW: Add assets section ---
+          files: | # Use the 'files' input which replaces 'assets' in newer versions of the action
+            CHANGELOG.md
