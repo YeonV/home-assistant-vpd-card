@@ -172,6 +172,9 @@ class VpdCard extends HTMLElement {
         const temperatureValue = tempState ? parseFloat(tempState.state) : NaN;
         const humidityValue = humidityState ? parseFloat(humidityState.state) : NaN;
 
+        const PLACEHOLDER_TEMP_ID = "sensor.your_temperature_sensor";
+        const PLACEHOLDER_HUMIDITY_ID = "sensor.your_humidity_sensor";
+
         // Initial DOM setup (only once)
         if (!this.content) {
             this.shadowRoot = this.attachShadow({ mode: 'open' });
@@ -215,13 +218,28 @@ class VpdCard extends HTMLElement {
 
         messageContainer.textContent = ""; // Clear previous message
 
-        if (isNaN(temperatureValue) || isNaN(humidityValue)) {
-            let unavailable = [];
-            if (isNaN(temperatureValue)) unavailable.push(`Temperature (${tempEntityId})`);
-            if (isNaN(humidityValue)) unavailable.push(`Humidity (${humidityEntityId})`);
-            messageContainer.textContent = `${unavailable.join(' and ')} unavailable or invalid.`;
-            this.clearHighlighting();
+        const tempIsNaN = isNaN(temperatureValue);
+        const humidityIsNaN = isNaN(humidityValue);
+
+        if (tempIsNaN || humidityIsNaN) {
+            // Check if the reason for NaN is *specifically* because we are using the placeholder entities
+            const isPreviewPlaceholders = (tempEntityId === PLACEHOLDER_TEMP_ID && humidityEntityId === PLACEHOLDER_HUMIDITY_ID);
+
+            if (isPreviewPlaceholders) {
+                // It's the preview scenario with default placeholders, suppress the message
+                this.clearHighlighting();
+                // console.log("Preview mode: Hiding unavailable message for placeholders."); // Optional debug log
+            } else {
+                // It's a runtime error with user-configured sensors (or mixed)
+                let unavailable = [];
+                // Only add to message if the *specific* sensor is unavailable/invalid
+                if (tempIsNaN) unavailable.push(`Temperature (${tempEntityId})`);
+                if (humidityIsNaN) unavailable.push(`Humidity (${humidityEntityId})`);
+                messageContainer.textContent = `${unavailable.join(' and ')} unavailable or invalid.`;
+                this.clearHighlighting();
+            }
         } else {
+            // Both values are valid numbers, proceed with highlighting
             this.highlightCell(temperatureValue, humidityValue);
         }
     }
