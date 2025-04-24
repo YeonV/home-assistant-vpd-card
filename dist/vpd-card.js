@@ -92,7 +92,7 @@ class VpdCard extends HTMLElement {
 
             #table-container {
                 overflow: auto;
-                max-height: ${this.config.max_height || '300px'}; /* Use config or default */
+                max-height: ${this.config.temperature === 'sensor.your_temperature_sensor' ? '100px' : this.config.max_height || '300px'}; /* Use config or default */
                 position: relative;
             }
 
